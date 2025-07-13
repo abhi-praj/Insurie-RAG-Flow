@@ -138,7 +138,7 @@ ANSWER:"""
     try:
         # Generate response using Command R
         response = co.chat(
-            model="command-r-plus",
+            model="command-r",
             message=prompt,
             max_tokens=max_tokens,
             temperature=0.3,
