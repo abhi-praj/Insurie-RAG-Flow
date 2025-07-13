@@ -1,0 +1,6 @@
+cohere==5.16.1
+langchain==0.3.26
+pdfplumber==0.11.7
+python-dotenv==1.1.1
+qdrant_client==1.14.3
+tqdm==4.67.1

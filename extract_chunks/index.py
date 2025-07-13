@@ -4,10 +4,6 @@ from pathlib import Path
 from tqdm import tqdm
 
 from unstructured.partition.auto import partition
-from unstructured.documents.elements import Table
-
-import spacy
-nlp = spacy.load("en_core_web_sm")
 
 PDF_DIR = "Insurie Vector DB PDFs"
 OUTPUT_FILE = "underwriting_semantic_chunks.json"
@@ -17,33 +13,18 @@ def extract_elements_from_pdf(file_path):
     elements = partition(file_path)
     carrier_name = Path(file_path).stem
 
-    chunks = []
-    for el in elements:
-        chunk = {
-            "type": el.category,
-            "text": el.text,
-            "metadata": {
-                "carrier": carrier_name,
-                "page": getattr(el.metadata, "page_number", None),
-            },
+    full_text = " ".join([el.text for el in elements if el.text])
+
+    chunk = {
+        "type": "document",
+        "text": full_text,
+        "metadata": {
+            "carrier": carrier_name,
+            "source_file": str(file_path),
         }
+    }
 
-        if isinstance(el, Table):
-            chunk["table_html"] = el.to_html()
-            chunk["table_markdown"] = el.to_markdown()
-
-        # Add NER (skip for tables)
-        if el.text and not isinstance(el, Table):
-            doc = nlp(el.text)
-            chunk["entities"] = [
-                {"text": ent.text, "label": ent.label_}
-                for ent in doc.ents
-                if ent.label_ in ("ORG", "DATE", "MONEY", "GPE", "MEDICAL_CONDITION", "PERSON")
-            ]
-
-        chunks.append(chunk)
-
-    return chunks
+    return [chunk]
 
 def process_all_pdfs():
     all_chunks = []

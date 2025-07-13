@@ -138,7 +138,7 @@ ANSWER:"""
     try:
         # Generate response using Command R
         response = co.chat(
-            model="command-r",
+            model="command-r-plus",
             message=prompt,
             max_tokens=max_tokens,
             temperature=0.3,
@@ -217,5 +217,10 @@ if __name__ == "__main__":
     carrier_query = "What are Foresters' underwriting guidelines for diabetes?"
     result3 = rag_query(carrier_query, top_k=5, carrier_filter="Foresters", show_sources=True)
     
+    print("\nRAG System Testing Complete!")
+    print("=" * 80)
+
+    carrier_query = "I have a 35-year-old male client, non-smoker, 5'10 tall, 180 lbs, looking for $750,000 term life insurance for 20 years. He has controlled high blood pressure. What carriers would you recommend and why? Why would you not reccomend Manulife"
+    result4 = rag_query(carrier_query, top_k=8, show_sources=True)
     print("\nRAG System Testing Complete!")
     print("=" * 80)
